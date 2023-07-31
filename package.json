@@ -1,0 +1,22 @@
+{
+  "name": "is-tor-order",
+  "version": "0.0.0",
+  "description": "Checks if http header order is Tor",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test"
+  },
+  "keywords": [
+    "bot",
+    "http",
+    "order",
+    "tor",
+    "scraper",
+    "headers",
+    "onion",
+    "fingerprint",
+    "antifingerprint"
+  ],
+  "author": "thepicture",
+  "license": "ISC"
+}
