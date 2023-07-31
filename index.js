@@ -4,7 +4,13 @@ module.exports = (headers, { areRawHeaders } = { areRawHeaders: false }) => {
     indexOfUserAgent,
     indexOfAcceptLanguage,
     indexOfAcceptEncoding,
-    indexOfConnection;
+    indexOfConnection,
+    indexOfDnt,
+    indexOfContentLength,
+    indexOfContentType,
+    indexOfOrigin,
+    indexOfReferer,
+    indexOfUpgradeInsecureRequests;
 
   let keys;
 
@@ -90,9 +96,72 @@ module.exports = (headers, { areRawHeaders } = { areRawHeaders: false }) => {
     indexOfConnection = keys.indexOf("connection");
   }
 
-  const isLinuxTor = false;
+  if (keys.indexOf("dnt") !== -1) {
+    indexOfDnt = keys.indexOf("dnt");
+  }
 
-  return !!isLinuxTor;
+  if (keys.indexOf("content-length") !== -1) {
+    indexOfContentLength = keys.indexOf("content-length");
+  }
+
+  if (keys.indexOf("content-type") !== -1) {
+    indexOfContentType = keys.indexOf("content-type");
+  }
+
+  if (keys.indexOf("origin") !== -1) {
+    indexOfOrigin = keys.indexOf("origin");
+  }
+
+  if (keys.indexOf("referer") !== -1) {
+    indexOfReferer = keys.indexOf("referer");
+  }
+
+  if (keys.indexOf("upgrade-insecure-requests") !== -1) {
+    indexOfUpgradeInsecureRequests = keys.indexOf("upgrade-insecure-requests");
+  }
+
+  const isLinuxTor =
+    (indexOfHost < indexOfUserAgent &&
+      indexOfUserAgent < indexOfAccept &&
+      indexOfAccept < indexOfAcceptLanguage &&
+      indexOfAcceptLanguage < indexOfAcceptEncoding &&
+      indexOfAcceptEncoding < indexOfReferer &&
+      indexOfReferer < indexOfContentType &&
+      indexOfContentType < indexOfOrigin &&
+      indexOfOrigin < indexOfContentLength &&
+      indexOfContentLength < indexOfConnection &&
+      !indexOfDnt) ||
+    (indexOfHost < indexOfUserAgent &&
+      indexOfUserAgent < indexOfAccept &&
+      indexOfAccept < indexOfAcceptLanguage &&
+      indexOfAcceptLanguage < indexOfAcceptEncoding &&
+      indexOfAcceptEncoding < indexOfReferer &&
+      indexOfReferer < indexOfContentType &&
+      indexOfContentType < indexOfContentLength &&
+      indexOfContentLength < indexOfOrigin &&
+      indexOfOrigin < indexOfConnection &&
+      indexOfConnection < indexOfUpgradeInsecureRequests &&
+      !indexOfDnt);
+
+  const isSafariTor =
+    (indexOfHost < indexOfConnection &&
+      indexOfConnection < indexOfAccept &&
+      indexOfAccept < indexOfUserAgent &&
+      indexOfUserAgent < indexOfAcceptEncoding &&
+      indexOfAcceptEncoding < indexOfAcceptLanguage) ||
+    (indexOfHost < indexOfAccept &&
+      indexOfAccept < indexOfUserAgent &&
+      indexOfUserAgent < indexOfAcceptLanguage &&
+      indexOfAcceptLanguage < indexOfAcceptEncoding &&
+      indexOfAcceptEncoding < indexOfConnection) ||
+    (indexOfHost < indexOfDnt &&
+      indexOfDnt < indexOfAccept &&
+      indexOfAccept < indexOfUserAgent &&
+      indexOfUserAgent < indexOfAcceptLanguage &&
+      indexOfAcceptLanguage < indexOfAcceptEncoding &&
+      indexOfAcceptEncoding < indexOfConnection);
+
+  return !!(isLinuxTor || isSafariTor);
 };
 
 const throwUnknownInputProtocolError = () => {
