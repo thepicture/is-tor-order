@@ -7,10 +7,16 @@ it("should return true with node:http library headers", () => {
   const expected = true;
   const headers = {
     host: "",
-    accept: "",
     "user-agent": "",
+    accept: "",
     "accept-language": "",
     "accept-encoding": "",
+    referer: "",
+    "content-type": "",
+    "content-length": "",
+    origin: "",
+    connection: "",
+    "upgrade-insecure-requests": "",
   };
 
   const actual = isTorOrder(headers);
@@ -22,10 +28,16 @@ it("should ignore casing", () => {
   const expected = true;
   const headers = {
     HOST: "",
-    aCcEpT: "",
     "User-Agent": "",
+    aCcEpT: "",
     "accept-language": "",
     "accept-encoding": "",
+    referer: "",
+    "content-type": "",
+    "content-length": "",
+    origin: "",
+    connection: "",
+    "upgrade-insecure-requests": "",
   };
 
   const actual = isTorOrder(headers);
@@ -52,10 +64,16 @@ it("should work with arrays", () => {
   const expected = true;
   const headers = [
     "host",
-    "accept",
     "user-agent",
+    "accept",
     "accept-language",
     "accept-encoding",
+    "referer",
+    "content-type",
+    "content-length",
+    "origin",
+    "connection",
+    "upgrade-insecure-requests",
   ];
 
   const actual = isTorOrder(headers);
@@ -67,10 +85,16 @@ it("should work with entries", () => {
   const expected = true;
   const headers = [
     ["host", ""],
-    ["accept", ""],
     ["user-agent", ""],
+    ["accept", ""],
     ["accept-language", ""],
     ["accept-encoding", ""],
+    ["referer", ""],
+    ["content-type", ""],
+    ["content-length", ""],
+    ["origin", ""],
+    ["connection", ""],
+    ["upgrade-insecure-requests", ""],
   ];
 
   const actual = isTorOrder(headers);
@@ -119,17 +143,28 @@ it("should work with rawHeaders entries", () => {
     "this is invalid because there can be only one",
     "Host",
     "127.0.0.1:8000",
+    "User-Agent",
+    "curl/7.22.0",
     "ACCEPT",
     "*",
     "accept-language",
     "",
-    "User-Agent",
-    "curl/7.22.0",
-
     "ACCEPT-lAnGuAgE",
     "en",
     "ACCEPT-encoding",
     "gzip",
+    "referer",
+    "",
+    "content-type",
+    "",
+    "content-length",
+    "",
+    "origin",
+    "",
+    "connection",
+    "",
+    "upgrade-insecure-requests",
+    "",
   ];
 
   const actual = isTorOrder(headers, { areRawHeaders: true });
