@@ -1,4 +1,18 @@
-module.exports = (headers, { areRawHeaders } = { areRawHeaders: false }) => {
+class IsTorOrderError extends Error {
+  constructor(message, headers) {
+    super(message);
+
+    this.headers = headers;
+  }
+}
+
+module.exports = (
+  headers,
+  { areRawHeaders, userAgentString } = {
+    areRawHeaders: false,
+    userAgentString: null,
+  }
+) => {
   let indexOfAccept,
     indexOfHost,
     indexOfUserAgent,
@@ -120,6 +134,22 @@ module.exports = (headers, { areRawHeaders } = { areRawHeaders: false }) => {
     indexOfUpgradeInsecureRequests = keys.indexOf("upgrade-insecure-requests");
   }
 
+  const isGetRequest =
+    indexOfHost < indexOfUserAgent &&
+    indexOfUserAgent < indexOfAccept &&
+    indexOfAccept < indexOfAcceptLanguage &&
+    indexOfAcceptLanguage < indexOfAcceptEncoding &&
+    indexOfAcceptEncoding < indexOfConnection &&
+    indexOfConnection < indexOfUpgradeInsecureRequests &&
+    !indexOfReferer;
+
+  if (isGetRequest && !userAgentString) {
+    throw new IsTorOrderError(
+      "Indefinite GET request, might be TOR or Firefox, specify userAgentString as option",
+      headers
+    );
+  }
+
   const isLinuxTor =
     (indexOfHost < indexOfUserAgent &&
       indexOfUserAgent < indexOfAccept &&
@@ -161,7 +191,13 @@ module.exports = (headers, { areRawHeaders } = { areRawHeaders: false }) => {
       indexOfAcceptLanguage < indexOfAcceptEncoding &&
       indexOfAcceptEncoding < indexOfConnection);
 
-  return !!(isLinuxTor || isSafariTor);
+  const isTorUserAgentString = /102/.test(userAgentString);
+
+  return !!(
+    isLinuxTor ||
+    isSafariTor ||
+    (isGetRequest && isTorUserAgentString)
+  );
 };
 
 const throwUnknownInputProtocolError = () => {

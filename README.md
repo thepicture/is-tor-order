@@ -28,11 +28,12 @@ app.listen(port);
   type Headers = Record<string, string> | string[] | Array<[string, string]>;
   type IsTorOrderOptions = {
     areRawHeaders: boolean;
+    userAgentString: string;
   };
 
   function isTorOrder(
     headers: Headers,
-    options: IsTorOrderOptions = { areRawHeaders = false }
+    options: IsTorOrderOptions = { areRawHeaders = false, userAgentString: null }
   ): boolean;
 
   export = isTorOrder;
@@ -79,7 +80,22 @@ app.listen(port);
 ];
 ```
 
+or can have `userAgentString` option that is required on indefinite GET requests when it is unclear whenever it's TOR or not.
+
+Throws
+
+```js
+class IsTorError extends Error(message, headers): {
+  message: string,
+  headers: Headers
+}
+```
+
+if indefinite request occurred and `userAgentString` is not specified.
+
 `areRawHeaders` defaults to `false`
+
+`userAgentString` defaults to `null`
 
 ## Test
 
