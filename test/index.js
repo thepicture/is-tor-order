@@ -218,3 +218,48 @@ it("should throw on odd rawHeaders entries", () => {
 
   assert.throws(actual, expected);
 });
+
+it("should throw on indefinite header order without userAgentString", () => {
+  const expected = {
+    message:
+      "Indefinite GET request, might be TOR or Firefox, specify userAgentString as option",
+  };
+  const headers = [
+    "Host",
+    "user-agent",
+    "accept",
+    "ACCEPT-language",
+    "ACCEPT-encoding",
+    "connection",
+    "upgrade-insecure-requests",
+    "sec-fetch-dest",
+    "sec-fetch-mode",
+    "sec-fetch-site",
+    "sec-fetch-user",
+  ];
+
+  const actual = () => isTorOrder(headers);
+
+  assert.throws(actual, expected);
+});
+
+it("should not throw on indefinite header order with userAgentString", () => {
+  const expected = false;
+  const headers = [
+    "Host",
+    "user-agent",
+    "accept",
+    "ACCEPT-language",
+    "ACCEPT-encoding",
+    "connection",
+    "upgrade-insecure-requests",
+    "sec-fetch-dest",
+    "sec-fetch-mode",
+    "sec-fetch-site",
+    "sec-fetch-user",
+  ];
+
+  const actual = isTorOrder(headers, { userAgentString: "totally tor" });
+
+  assert.strictEqual(actual, expected);
+});
