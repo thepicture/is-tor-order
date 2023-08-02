@@ -85,13 +85,44 @@ or can have `userAgentString` option that is required on indefinite GET requests
 Throws
 
 ```js
-class IsTorError extends Error(message, headers): {
+class IsTorOrderError extends Error(message, headers): {
   message: string,
   headers: Headers
 }
 ```
 
 if indefinite request occurred and `userAgentString` is not specified.
+
+## Exception handling Example
+
+```js
+const isTorOrder = require("is-tor-order");
+const { IsTorOrderError } = require("is-tor-order");
+
+try {
+  const isTor = isTorOrder(req.headers);
+  // ...
+} catch (error) {
+  if (error instanceof IsTorOrderError) {
+    // Handle indefinite case
+  }
+}
+```
+
+or
+
+```js
+const isTorOrder = require("is-tor-order");
+
+try {
+  const isTor = isTorOrder(req.headers);
+  // ...
+} catch (error) {
+  if (error instanceof isTorOrder.IsTorOrderError) {
+    // Handle indefinite case
+  }
+}
+```
 
 `areRawHeaders` defaults to `false`
 

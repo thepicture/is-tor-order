@@ -6,7 +6,7 @@ class IsTorOrderError extends Error {
   }
 }
 
-module.exports = (
+const isTorOrder = (
   headers,
   { areRawHeaders, userAgentString } = {
     areRawHeaders: false,
@@ -199,6 +199,10 @@ module.exports = (
     (isGetRequest && isTorUserAgentString)
   );
 };
+
+isTorOrder.IsTorOrderError = IsTorOrderError;
+
+module.exports = isTorOrder;
 
 const throwUnknownInputProtocolError = () => {
   throw new Error("Input protocol is unknown");
