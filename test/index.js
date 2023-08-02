@@ -263,3 +263,48 @@ it("should not throw on indefinite header order with userAgentString", () => {
 
   assert.strictEqual(actual, expected);
 });
+
+it("can import IsTorOrderError", () => {
+  const { IsTorOrderError: expected } = require("../index");
+  const headers = [
+    "Host",
+    "user-agent",
+    "accept",
+    "ACCEPT-language",
+    "ACCEPT-encoding",
+    "connection",
+    "upgrade-insecure-requests",
+    "sec-fetch-dest",
+    "sec-fetch-mode",
+    "sec-fetch-site",
+    "sec-fetch-user",
+  ];
+
+  const actual = () => isTorOrder(headers);
+
+  assert.ok(expected);
+  assert.throws(actual, expected);
+});
+
+it("can detect package error by using instanceof", () => {
+  const expected = isTorOrder.IsTorOrderError;
+  const headers = [
+    "Host",
+    "user-agent",
+    "accept",
+    "ACCEPT-language",
+    "ACCEPT-encoding",
+    "connection",
+    "upgrade-insecure-requests",
+    "sec-fetch-dest",
+    "sec-fetch-mode",
+    "sec-fetch-site",
+    "sec-fetch-user",
+  ];
+
+  const actual = () => isTorOrder(headers);
+  const error = new isTorOrder.IsTorOrderError();
+
+  assert.strictEqual(error instanceof isTorOrder.IsTorOrderError, true);
+  assert.throws(actual, expected);
+});
