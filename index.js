@@ -150,6 +150,10 @@ const isTorOrder = (
     );
   }
 
+  if (userAgentString && !/20100101/.test(userAgentString)) {
+    return false;
+  }
+
   const isLinuxTor =
     (indexOfHost < indexOfUserAgent &&
       indexOfUserAgent < indexOfAccept &&
