@@ -3,6 +3,7 @@
   "version": "1.1.2",
   "description": "Checks if http header order is Tor",
   "main": "index.js",
+  "repository": "thepicture/is-tor-order",
   "scripts": {
     "test": "node test"
   },
